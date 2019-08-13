@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/theme/cobalt.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/theme/monokai.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/javascript/javascript.min.js"></script>
+
+
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+
+        .CodeMirror,
+        iframe {
+            flex: 1 1 50%;
+            height: 100%;
+        }
+
+        iframe {
+            border: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- <button onclick="submit_html();">Submit</button> -->
+    <div class="container">
+        <textarea id="editor"></textarea>
+        <iframe id="result"></iframe>
+    </div>
+
+    <script>
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        }
+
+        function preview(cm) {
+            const code = cm.getValue();
+            const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
+            const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
+            document.getElementById("result").src = data_url;
+        }
+
+        function currentId() {
+            return location.hash ? location.hash.substr(1) : null;
+        }
+
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+            lineNumbers: true,
+            indentWithTabs: false,
+            mode: "javascript",
+            theme: "monokai",
+            extraKeys: {
+                "Ctrl-S": save,
+            },
+        });
+        editor.on('change', debounce(preview, 1000));
+
+        if (currentId()) {
+            fetch(`https://api.keyvalue.xyz/${currentId()}/v1`).then(a => a.text()).then(text => editor.setValue(text));
+        }
+
+
+        function save() {
+            console.log("SAVE!");
+            //const url = 'https://api.keyvalue.xyz/7ecc4672/v1';
+            editor.save();
+            const code = document.getElementById("editor").value;
+
+            let id = currentId();
+            let done = Promise.resolve(id);
+            if (!id) {
+                done = fetch('https://api.keyvalue.xyz/new/v1', { method: 'POST' }).then(a => a.text()).then(url => {
+                    const m = /\/([^\/]+)\/v1/.exec(url);
+                    if (m) {
+                        const id = m[1];
+                        window.history.pushState('page2', "saved", '#' + id);
+                        return id;
+                    }
+                    return null;
+                });
+            }
+            done.then(id => fetch(`https://api.keyvalue.xyz/${id}/v1`, { method: 'POST', body: code }));
+        }
+
+        // function submit_html() {
+        //     editor.save();
+        //     const code = document.getElementById("editor").value;
+        //     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
+        //     const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
+        //     document.getElementById("result").src = data_url;
+        // }
+    </script>
+
+</body>
+
+</html>
