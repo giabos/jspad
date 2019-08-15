@@ -5,15 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>JSPad</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/lint/lint.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/theme/cobalt.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/theme/monokai.min.css">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jshint/2.10.2/jshint.min.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/mode/javascript/javascript.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/lint/lint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/lint/javascript-lint.min.js"></script>
 
     <style>
         body,
@@ -26,7 +30,7 @@
             width: 100%;
             height: 100vh;
             display: flex;
-        }
+            }
 
         .CodeMirror,
         iframe {
@@ -42,37 +46,28 @@
 </head>
 
 <body>
-    <!-- <button onclick="submit_html();">Submit</button> -->
     <div class="container">
         <textarea id="editor"></textarea>
         <iframe id="result"></iframe>
     </div>
 
-    <script>
-        function debounce(func, wait, immediate) {
-            var timeout;
-            return function () {
-                var context = this, args = arguments;
-                var later = function () {
-                    timeout = null;
-                    if (!immediate) func.apply(context, args);
-                };
-                var callNow = immediate && !timeout;
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-                if (callNow) func.apply(context, args);
-            };
-        }
+    <script type="module">
 
+        import {debounce} from "https://unpkg.com/throttle-debounce@2.1.0/dist/index.esm.js";
+
+        // return id from URL. id used to retrieve/store the jscode from/to keyvalue cloud storage.
+        const currentId = () => location.hash && location.hash.substr(1);
+
+        const setTitle = (str) => document.title = 'JSPad - ' + str;
+
+
+        // preview result of current jscode in iframe (right side).
         function preview(cm) {
             const code = cm.getValue();
             const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
             const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
             document.getElementById("result").src = data_url;
-        }
-
-        function currentId() {
-            return location.hash ? location.hash.substr(1) : null;
+            setTitle ("! unsaved !")
         }
 
 
@@ -80,27 +75,27 @@
             lineNumbers: true,
             indentWithTabs: false,
             mode: "javascript",
+            lint: {esversion: 7},
             theme: "monokai",
+            gutters: ['CodeMirror-lint-markers'],
             extraKeys: {
                 "Ctrl-S": save,
             },
         });
-        editor.on('change', debounce(preview, 1000));
+        editor.on('change', debounce(1000, preview));
 
         if (currentId()) {
+            // if id present in url fetch the code from keyvalue storage.
             fetch(`https://api.keyvalue.xyz/${currentId()}/v1`).then(a => a.text()).then(text => editor.setValue(text));
         }
 
-
         function save() {
-            console.log("SAVE!");
-            //const url = 'https://api.keyvalue.xyz/7ecc4672/v1';
             editor.save();
             const code = document.getElementById("editor").value;
 
-            let id = currentId();
+            const id = currentId();
             let done = Promise.resolve(id);
-            if (!id) {
+            if (!id) { // if no key yet, create it
                 done = fetch('https://api.keyvalue.xyz/new/v1', { method: 'POST' }).then(a => a.text()).then(url => {
                     const m = /\/([^\/]+)\/v1/.exec(url);
                     if (m) {
@@ -111,16 +106,9 @@
                     return null;
                 });
             }
-            done.then(id => fetch(`https://api.keyvalue.xyz/${id}/v1`, { method: 'POST', body: code }));
+            done.then(id => fetch(`https://api.keyvalue.xyz/${id}/v1`, { method: 'POST', body: code }).then(() => setTitle('saved')));
         }
 
-        // function submit_html() {
-        //     editor.save();
-        //     const code = document.getElementById("editor").value;
-        //     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
-        //     const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
-        //     document.getElementById("result").src = data_url;
-        // }
     </script>
 
 </body>
