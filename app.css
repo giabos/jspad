@@ -8,13 +8,25 @@ html {
     width: 100%;
     height: 100vh;
     display: flex;
-    }
+}
 
-.CodeMirror, iframe {
-    flex: 1 1 50%;
+.CodeMirror,
+iframe {
+    /*flex: 1 1 50%;*/
+    flex: 1 1;
     height: 100%;
 }
 
 iframe {
     border: 0;
+}
+
+.gutter.gutter-horizontal {
+    cursor: ew-resize;
+    xbackground-color: lightgrey;
+
+
+    background: linear-gradient(45deg, #aaa 1%, #fff 1%, #fff 49%, #aaa 49%, #aaa 51%, #fff 51%, #fff 99%, #aaa 99%);
+    background-size: 4px 4px;
+    background-position: 50px 50px;
 }
