@@ -1,0 +1,20 @@
+body,
+html {
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    }
+
+.CodeMirror, iframe {
+    flex: 1 1 50%;
+    height: 100%;
+}
+
+iframe {
+    border: 0;
+}

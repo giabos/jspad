@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,98 +18,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/lint/lint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.2/addon/lint/javascript-lint.min.js"></script>
 
-    <style>
-        body,
-        html {
-            padding: 0;
-            margin: 0;
-        }
-
-        .container {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            }
-
-        .CodeMirror,
-        iframe {
-            flex: 1 1 50%;
-            height: 100%;
-        }
-
-        iframe {
-            border: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="app.css">
 
 </head>
-
 <body>
     <div class="container">
         <textarea id="editor"></textarea>
         <iframe id="result"></iframe>
     </div>
-
-    <script type="module">
-
-        import {debounce} from "https://unpkg.com/throttle-debounce@2.1.0/dist/index.esm.js";
-
-        // return id from URL. id used to retrieve/store the jscode from/to keyvalue cloud storage.
-        const currentId = () => location.hash && location.hash.substr(1);
-
-        const setTitle = (str) => document.title = 'JSPad - ' + str;
-
-
-        // preview result of current jscode in iframe (right side).
-        function preview(cm) {
-            const code = cm.getValue();
-            const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
-            const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
-            document.getElementById("result").src = data_url;
-            setTitle ("! unsaved !")
-        }
-
-
-        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-            lineNumbers: true,
-            indentWithTabs: false,
-            mode: "javascript",
-            lint: {esversion: 7},
-            theme: "monokai",
-            gutters: ['CodeMirror-lint-markers'],
-            extraKeys: {
-                "Ctrl-S": save,
-            },
-        });
-        editor.on('change', debounce(1000, preview));
-
-        if (currentId()) {
-            // if id present in url fetch the code from keyvalue storage.
-            fetch(`https://api.keyvalue.xyz/${currentId()}/v1`).then(a => a.text()).then(text => editor.setValue(text));
-        }
-
-        function save() {
-            editor.save();
-            const code = document.getElementById("editor").value;
-
-            const id = currentId();
-            let done = Promise.resolve(id);
-            if (!id) { // if no key yet, create it
-                done = fetch('https://api.keyvalue.xyz/new/v1', { method: 'POST' }).then(a => a.text()).then(url => {
-                    const m = /\/([^\/]+)\/v1/.exec(url);
-                    if (m) {
-                        const id = m[1];
-                        window.history.pushState('page2', "saved", '#' + id);
-                        return id;
-                    }
-                    return null;
-                });
-            }
-            done.then(id => fetch(`https://api.keyvalue.xyz/${id}/v1`, { method: 'POST', body: code }).then(() => setTitle('saved')));
-        }
-
-    </script>
-
+    <script type="module" src="app.js"></script>
 </body>
-
 </html>

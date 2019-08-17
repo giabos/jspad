@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JSPad</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/androidstudio.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            color: #4d4d4d;
+        }
+
+        h1 {
+            font-size: 35px;
+        }
+
+        h1 img {
+            position: relative;
+            top: 7px;
+        }
+
+        h3 {
+            margin-top: 5px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            float: right;
+            margin-bottom: 15px;
+        }
+        hr {
+            clear: both;
+            height: 1px;
+            color: lightgrey;
+            background-color: lightgrey;
+            border: none;
+        }
+    </style>
+    <script>
+        function useThisCode(id) {
+            const code = document.getElementById(id).innerText;
+            window.top.postMessage(code, '*');
+        }
+
+    </script>
+</head>
+
+<body>
+    <h1><img width="50" src="https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png"></img>pad</h1>
+
+    <h2>Usage</h2>
+
+        <ul>
+            <li>Write JS code in the left pane to see the result (automatic refresh) in the right pane.</li>
+            <li>CTRL-S to save the script. Unique identifier added to the URL which can then be bookmarked.</li>
+            <li>Import other libraries by using the <i>import</i> statement (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import" target="_blank">ESM</a> compatible libraries)  </li>
+        </ul>
+
+    <h2>Examples</h2>
+
+    <h3>console.log</h3>
+    <pre><code class="javascript" id="code-1">
+import "https://unpkg.com/console-log-div";
+import dayjs from "https://unpkg.com/dayjs@1.8.15/esm/index.js";
+
+console.log(dayjs().format("DD-MM-YYYY"));
+    </code></pre>
+
+    <button onclick="useThisCode('code-1')">Try it</button>
+
+    <hr>
+
+
+    <h3>react</h3>
+    <pre><code class="javascript" id="code-2">
+import {React, ReactDOM} from 'https://unpkg.com/es-react';
+import nojsx from 'https://giabos.github.io/nojsx/index.js';
+const {h1, div, p} = nojsx(React.createElement);
+
+
+const app = div([h1('hello'), p("blabla")]);
+
+ReactDOM.render(app,document.getElementById('root'));
+    </code></pre>
+
+    <button onclick="useThisCode('code-2')">Try it</button>
+
+    <hr>
+
+
+
+
+    <h3>superfine</h3>
+    <pre><code class="javascript" id="code-3">
+import {h, patch} from 'https://unpkg.com/superfine';
+import nojsx from 'https://giabos.github.io/nojsx/index.js';
+const {h1, div, p} = nojsx(h);
+
+patch(document.getElementById('root'), div([h1('hello'), p("blabla")]))
+    </code></pre>
+
+    <button onclick="useThisCode('code-3')">Try it</button>
+
+    <hr>
+
+</body>
+
+</html>
