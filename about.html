@@ -9,50 +9,12 @@
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/androidstudio.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/monokai.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
 
-    <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: #4d4d4d;
-        }
+    <link rel="stylesheet" href="about.css">
 
-        h1 {
-            font-size: 35px;
-        }
-
-        h1 img {
-            position: relative;
-            top: 7px;
-        }
-
-        h3 {
-            margin-top: 5px;
-        }
-
-        ul {
-            list-style-type: square;
-        }
-
-        ul li {
-            margin-bottom: 10px;
-        }
-
-        button {
-            float: right;
-            margin-bottom: 15px;
-        }
-        hr {
-            clear: both;
-            height: 1px;
-            color: lightgrey;
-            background-color: lightgrey;
-            border: none;
-        }
-    </style>
     <script>
         function useThisCode(id) {
             const code = document.getElementById(id).innerText;
@@ -119,6 +81,37 @@ patch(document.getElementById('root'), div([h1('hello'), p("blabla")]))
     <button onclick="useThisCode('code-3')">Try it</button>
 
     <hr>
+
+
+
+
+    <h3>react + jsx</h3>
+    <pre><code class="javascript" id="code-4">
+/** @jsx React.createElement */
+import {React, ReactDOM} from 'https://unpkg.com/es-react';
+ReactDOM.render(&lt;div&gt;aaa&lt;/div&gt;,document.getElementById('root'));
+    </code></pre>
+
+    <button onclick="useThisCode('code-4')">Try it</button>
+
+    <hr>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
 
 </body>
 

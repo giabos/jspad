@@ -23,9 +23,7 @@ iframe {
 
 .gutter.gutter-horizontal {
     cursor: ew-resize;
-    xbackground-color: lightgrey;
-
-
+    /* https://online-free-tools.com/fr/css_generateur_motif_pattern_background */
     background: linear-gradient(45deg, #aaa 1%, #fff 1%, #fff 49%, #aaa 49%, #aaa 51%, #fff 51%, #fff 99%, #aaa 99%);
     background-size: 4px 4px;
     background-position: 50px 50px;

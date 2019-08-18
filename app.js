@@ -1,4 +1,5 @@
 import {debounce} from "https://unpkg.com/throttle-debounce@2.1.0/dist/index.esm.js";
+import unjsx from './jsx.js';
 
 // return id from URL. id used to retrieve/store the jscode from/to keyvalue cloud storage.
 const currentId = () => location.hash && location.hash.substr(1);
@@ -8,7 +9,9 @@ const setTitle = (str) => document.title = 'JSPad - ' + str;
 
 // preview result of current jscode in iframe (right side).
 function preview (cm) {
-    const code = cm.getValue();
+    const code = unjsx(cm.getValue());
+    console.log(code);
+    //const code = cm.getValue();
     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
     const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
     document.getElementById("result").src = data_url;
@@ -39,6 +42,7 @@ if (currentId()) {
     showAbout();
 }
 
+// handle code snippets sent by the "about.html" page in iframe.
 window.onmessage = function (e) {
     const code = e.data;
     editor.setValue(code);

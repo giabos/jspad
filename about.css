@@ -1,0 +1,38 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #4d4d4d;
+}
+
+h1 {
+    font-size: 35px;
+}
+
+h1 img {
+    position: relative;
+    top: 7px;
+}
+
+h3 {
+    margin-top: 5px;
+}
+
+ul {
+    list-style-type: square;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
+button {
+    float: right;
+    margin-bottom: 15px;
+}
+
+hr {
+    clear: both;
+    height: 1px;
+    color: lightgrey;
+    background-color: lightgrey;
+    border: none;
+}

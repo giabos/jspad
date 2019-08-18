@@ -1,0 +1,25 @@
+{
+    "name": "jspad",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "jest --runInBand --no-cache --config jest.config.js",
+        "test:watch": "jest --watch --runInBand --no-cache --config jest.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/giabos/jspad.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/giabos/jspad/issues"
+    },
+    "homepage": "https://github.com/giabos/jspad#readme",
+    "devDependencies": {
+        "esm": "3.1.0",
+        "jest": "24.9.0"
+    }
+}
