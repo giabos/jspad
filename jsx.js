@@ -25,23 +25,22 @@ function propsToStr (props) {
 
 const quotable = (s) => isCapitalized(s) ? s : `"${s}"`
 
-function toStr(node, factory) {
+function translated (node, factory) {
     switch(node.type) {
         case "#text": return `"${node.nodeValue}"`
         case "#jsx":  return typeof node.nodeValue === 'string' ? node.nodeValue : "Not implemented!!";
-        default: return `${factory}(${quotable(node.type)}, {${propsToStr(node.props)}}, [${node.children.map(c => toStr(c, factory)).join(", ")}])`;
+        default: return `${factory}(${quotable(node.type)}, {${propsToStr(node.props)}}, [${node.children.map(c => translated(c, factory)).join(", ")}])`;
     }
 }
-
 
 const unjsx = (str) => {
     const match = /\/\*\*\s*@jsx\s+([\w\.]+)\s*\*\//.exec(str);
     if (match) {
         const factoryFunctionName = match[1];
-        return str.replace(/<([a-z\d]+)\b[^>]*>[^;]+<\/\1>/g, (s) => {
-            console.log(s);
+        return str.replace(/<(\w+)\b[^>]*>[^;]*<\/\1>/g, (s) => {  // parse sections of code containing jsx
+            //console.log(s);
             const parsedTree = jsxparser(s);
-            return toStr(parsedTree, factoryFunctionName);
+            return translated(parsedTree, factoryFunctionName);
         });
 
     } else {

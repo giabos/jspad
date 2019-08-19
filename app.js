@@ -10,7 +10,7 @@ const setTitle = (str) => document.title = 'JSPad - ' + str;
 // preview result of current jscode in iframe (right side).
 function preview (cm) {
     const code = unjsx(cm.getValue());
-    console.log(code);
+    //console.log(code);
     //const code = cm.getValue();
     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}></body></html>`;
     const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
