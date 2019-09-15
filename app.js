@@ -1,10 +1,14 @@
 import {debounce} from "https://unpkg.com/throttle-debounce@2.1.0/dist/index.esm.js";
 import unjsx from './jsx.js';
 
-// return id from URL. id used to retrieve/store the jscode from/to keyvalue cloud storage.
-const currentId = () => location.hash && location.hash.substr(1);
 
 const setTitle = (str) => document.title = 'JSPad - ' + str;
+
+const storeUrl = 'https://kvdb.io/MNUDuMSNBp9ab5f9mbQKTT/';
+
+
+//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+const newStoreKey = () => Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
 
 
 // preview result of current jscode in iframe (right side).
@@ -35,9 +39,13 @@ var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
 });
 editor.on('change', debounce(1000, preview));
 
+
+// return id from URL. id used to retrieve/store the jscode from/to keyvalue cloud storage.
+const currentId = () => location.hash && location.hash.substr(1);
+
 if (currentId()) {
     // if id present in url fetch the code from keyvalue storage.
-    fetch(`https://api.keyvalue.xyz/${currentId()}/v1`).then(a => a.text()).then(text => editor.setValue(text));
+    fetch(storeUrl + currentId()).then(a => a.text()).then(text => editor.setValue(text));
 } else {
     showAbout();
 }
@@ -51,21 +59,12 @@ window.onmessage = function (e) {
 function save() {
     editor.save();
     const code = document.getElementById("editor").value;
-
-    const id = currentId();
-    let done = Promise.resolve(id);
-    if (!id) { // if no key yet, create it
-        done = fetch('https://api.keyvalue.xyz/new/v1', { method: 'POST' }).then(a => a.text()).then(url => {
-            const m = /\/([^\/]+)\/v1/.exec(url);
-            if (m) {
-                const id = m[1];
-                window.history.pushState('page2', "saved", '#' + id);
-                return id;
-            }
-            return null;
-        });
+    let id = currentId();
+    if (!id) {
+        id = newStoreKey();
+        window.history.pushState('page2', "saved", '#' + id);
     }
-    done.then(id => fetch(`https://api.keyvalue.xyz/${id}/v1`, { method: 'POST', body: code }).then(() => setTitle('saved')));
+    fetch(storeUrl + id, { method: 'POST', body: code }).then(() => setTitle('saved'));
 }
 
 
