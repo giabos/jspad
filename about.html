@@ -75,7 +75,7 @@ import {h, patch} from 'https://unpkg.com/superfine';
 import nojsx from 'https://giabos.github.io/nojsx/index.js';
 const {h1, div, p} = nojsx(h);
 
-patch(document.getElementById('root'), div([h1('hello'), p("blabla")]))
+patch(document.getElementById('root'), div([h1('hello'), p("blabla")]));
     </code></pre>
 
     <button onclick="useThisCode('code-3')">Try it</button>
@@ -99,6 +99,26 @@ ReactDOM.render(&lt;div&gt;aaa&lt;/div&gt;,document.getElementById('root'));
 
 
 
+    <h3>custom elements + hauntedjs</h3>
+    <pre><code class="javascript" id="code-5">
+import { html, virtual, component, useState } from 'https://unpkg.com/haunted/haunted.js';
+
+const list = n => Array(n).fill().map((_,i)=>i+1);
+const List = virtual((n) => html`<ul>${ list(n).map(a => html`<li>${a}</li>`)}</ul>`);
+
+function App () {
+        const [count, setCount] = useState(1);
+    return html`
+        <h1>test</h1>
+        <button @click=${()=>setCount(count+1)}>click</button>
+        ${List(count)}
+    `; 
+}
+
+customElements.define('custom-root', component(App));
+    </code></pre>
+    <button onclick="useThisCode('code-5')">Try it</button>
+    <hr>
 
 
 
