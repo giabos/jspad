@@ -101,21 +101,21 @@ ReactDOM.render(&lt;div&gt;aaa&lt;/div&gt;,document.getElementById('root'));
 
     <h3>custom elements + hauntedjs</h3>
     <pre><code class="javascript" id="code-5">
-import { html, virtual, component, useState } from 'https://unpkg.com/haunted/haunted.js';
+import { html, virtual, component, useState } from &#x27;https://unpkg.com/haunted/haunted.js&#x27;;
 
-const list = n => Array(n).fill().map((_,i)=>i+1);
-const List = virtual((n) => html`<ul>${ list(n).map(a => html`<li>${a}</li>`)}</ul>`);
+const list = n =&#x3E; Array(n).fill().map((_,i)=&#x3E;i+1);
+const List = virtual((n) =&#x3E; html&#x60;&#x3C;ul&#x3E;${ list(n).map(a =&#x3E; html&#x60;&#x3C;li&#x3E;${a}&#x3C;/li&#x3E;&#x60;)}&#x3C;/ul&#x3E;&#x60;);
 
 function App () {
         const [count, setCount] = useState(1);
-    return html`
-        <h1>test</h1>
-        <button @click=${()=>setCount(count+1)}>click</button>
+    return html&#x60;
+        &#x3C;h1&#x3E;test&#x3C;/h1&#x3E;
+        &#x3C;button @click=${()=&#x3E;setCount(count+1)}&#x3E;click&#x3C;/button&#x3E;
         ${List(count)}
-    `; 
+    &#x60;; 
 }
 
-customElements.define('custom-root', component(App));
+customElements.define(&#x27;custom-root&#x27;, component(App));
     </code></pre>
     <button onclick="useThisCode('code-5')">Try it</button>
     <hr>
