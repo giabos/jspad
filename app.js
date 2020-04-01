@@ -4,7 +4,8 @@ import unjsx from './jsx.js';
 
 const setTitle = (str) => document.title = 'JSPad - ' + str;
 
-const storeUrl = 'https://kvdb.io/MNUDuMSNBp9ab5f9mbQKTT/';
+//const storeUrl = 'https://kvdb.io/MNUDuMSNBp9ab5f9mbQKTT/';
+const storeUrl = 'https://jspad.azurewebsites.net/'; // azure storage.
 
 
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -61,10 +62,14 @@ function save() {
     const code = document.getElementById("editor").value;
     let id = currentId();
     if (!id) {
-        id = newStoreKey();
-        window.history.pushState('page2', "saved", '#' + id);
+        //id = newStoreKey();
+        fetch(storeUrl, { method: 'POST', body: code }).then(a => a.json()).then(resp => {
+            setTitle('saved');
+            window.history.pushState('page2', "saved", '#' + resp.id);
+        });    
+    } else {
+        fetch(storeUrl + id, { method: 'PUT', body: code }).then(() => setTitle('saved'));
     }
-    fetch(storeUrl + id, { method: 'POST', body: code }).then(() => setTitle('saved'));
 }
 
 
