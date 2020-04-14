@@ -54,11 +54,14 @@ console.log(dayjs().format("DD-MM-YYYY"));
     <pre><code class="javascript" id="code-2">
 import {React, ReactDOM} from 'https://unpkg.com/es-react';
 import nojsx from 'https://giabos.github.io/nojsx/index.js';
-const {h1, div, p} = nojsx(React.createElement);
+const {h1, div, p, span, button, component} = nojsx(React.createElement);
+const {useState} = React;
 
-
-const app = div([h1('hello'), p("blabla")]);
-
+const Counter = component(({title}) =&gt; {
+   const [count, setCount] = useState(0);
+   return [span(title), button({onClick: () =&gt; setCount(count+1)}, count)];
+});
+const app = div([h1('title'), p("test"), Counter({title: "count: " })]);
 ReactDOM.render(app,document.getElementById('root'));
     </code></pre>
 
