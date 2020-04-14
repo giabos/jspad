@@ -1,8 +1,8 @@
-/* cfr allow using "import" statements in jest. cfr https://github.com/kenotron/esm-jest */
+/* cfr allow using "import" statements in jest. cfr https://github.com/ActuallyACat/jest-esm-transformer */
 
 module.exports = {
   transform: {
-    '\\.m?jsx?$': 'esm'
+    '\\.jsx?$': 'jest-esm-transformer'
   },
   transformIgnorePatterns: []
 };
