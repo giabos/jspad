@@ -18,7 +18,7 @@ function preview (cm) {
     //console.log(code);
     //const code = cm.getValue();
     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}><custom-root></custom-root></body></html>`;
-    const data_url = "data:text/html;charset=utf-8;base64," + btoa(html);
+    const data_url = "data:text/html;charset=utf-8;base64," + Buffer.from(html).toString('base64');
     document.getElementById("result").src = data_url;
     setTitle ("! unsaved !")
 }
