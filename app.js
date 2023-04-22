@@ -12,13 +12,23 @@ const storeUrl = 'https://jspad.azurewebsites.net/'; // azure storage.
 const newStoreKey = () => Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
 
 
+const toBase64 = (text) => {
+    if (window.Buffer) {
+        return Buffer.from(html).toString('base64');
+    } else {
+        return btoa(text);
+    }
+}
+
+
+
 // preview result of current jscode in iframe (right side).
 function preview (cm) {
     const code = unjsx(cm.getValue());
     //console.log(code);
     //const code = cm.getValue();
     const html = `<!doctype html><html><body><div id="root"></div><script type="module">${code}</${'script'}><custom-root></custom-root></body></html>`;
-    const data_url = "data:text/html;charset=utf-8;base64," + Buffer.from(html).toString('base64');
+    const data_url = "data:text/html;charset=utf-8;base64," + toBase64(html);
     document.getElementById("result").src = data_url;
     setTitle ("! unsaved !")
 }
