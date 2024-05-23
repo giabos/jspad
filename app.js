@@ -6,7 +6,8 @@ const setTitle = (str) => document.title = 'JSPad - ' + str;
 
 //const storeUrl = 'https://kvdb.io/MNUDuMSNBp9ab5f9mbQKTT/';
 //const storeUrl = 'https://jspad.azurewebsites.net/'; // azure storage.
-const storeUrl='https://hilarious-jay-coveralls.cyclic.app/store/';
+//const storeUrl='https://hilarious-jay-coveralls.cyclic.app/store/';
+const storeUrl='https://mighty-cream-daffodil.glitch.me/store';
 
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 const newStoreKey = () => Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
@@ -56,7 +57,7 @@ const currentId = () => location.hash && location.hash.substr(1);
 
 if (currentId()) {
     // if id present in url fetch the code from keyvalue storage.
-    fetch(storeUrl + currentId()).then(a => a.text()).then(text => editor.setValue(text));
+    fetch(`${storeUrl}/${currentId()}`).then(a => a.text()).then(text => editor.setValue(text));
 } else {
     showAbout();
 }
@@ -78,7 +79,7 @@ function save() {
             window.history.pushState('page2', "saved", '#' + resp.id);
         });    
     } else {
-        fetch(storeUrl + id, { method: 'PUT', body: code }).then(() => setTitle('saved'));
+        fetch(`${storeUrl}/${id}`, { method: 'PUT', body: code }).then(() => setTitle('saved'));
     }
 }
 
